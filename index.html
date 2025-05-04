@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Treasure Map™ - Mockup</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Open+Sans:wght@400;600&display=swap');
+
+        :root {
+            --font-primary: 'Open Sans', sans-serif;
+            --font-secondary: 'Merriweather', serif;
+            --color-background: #f4f1ea; /* Parchment */
+            --color-text: #4a4a4a;
+            --color-primary: #a0522d; /* Sienna Brown */
+            --color-secondary: #5f9ea0; /* Cadet Blue */
+            --color-accent: #daa520; /* Goldenrod */
+            --color-border: #d3c0a0;
+            --shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            font-family: var(--font-primary);
+            background-color: var(--color-background);
+            color: var(--color-text);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        .app-container {
+            background-color: #fffaf0; /* Floral White - slightly richer than background */
+            border: 1px solid var(--color-border);
+            border-radius: 15px;
+            padding: 30px 40px;
+            max-width: 800px;
+            width: 100%;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease-in-out;
+        }
+
+        h1, h2, h3 {
+            font-family: var(--font-secondary);
+            color: var(--color-primary);
+            text-align: center;
+            margin-bottom: 1.5em;
+        }
+        h1 { font-size: 2.2em; }
+        h2 { font-size: 1.8em; }
+        h3 { font-size: 1.4em; color: var(--color-secondary); margin-bottom: 1em;}
+
+
+        .screen {
+            display: none; /* Hide screens by default */
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Island Selection */
+        .island-selection {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .island-card {
+            background-color: #fff;
+            border: 2px solid var(--color-border);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .island-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+            border-color: var(--color-primary);
+        }
+
+        .island-card img { /* Placeholder for actual island graphics */
+            max-width: 60px;
+            height: auto;
+            margin-bottom: 15px;
+            opacity: 0.8;
+        }
+
+        .island-card h4 {
+            font-family: var(--font-secondary);
+            color: var(--color-secondary);
+            margin: 0;
+            font-size: 1.1em;
+        }
+
+        /* JTBD Module */
+        .jtbd-question, .challenge-draft, .clues-display {
+            margin-bottom: 30px;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            border: 1px solid var(--color-border);
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--color-secondary);
+            font-size: 1.1em;
+        }
+
+        textarea {
+            width: 95%;
+            padding: 15px;
+            border: 1px solid var(--color-border);
+            border-radius: 5px;
+            font-family: var(--font-primary);
+            font-size: 1em;
+            min-height: 100px;
+            margin-bottom: 15px;
+            resize: vertical;
+        }
+         textarea:focus {
+            outline: none;
+            border-color: var(--color-primary);
+            box-shadow: 0 0 5px rgba(160, 82, 45, 0.3);
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            gap: 15px;
+        }
+
+        button {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 25px; /* Rounded pill shape */
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-primary {
+            background-color: var(--color-primary);
+            color: white;
+        }
+        .btn-primary:hover {
+            background-color: #7e3f1a; /* Darker Sienna */
+            box-shadow: 0 4px 8px rgba(160, 82, 45, 0.3);
+        }
+
+        .btn-secondary {
+            background-color: var(--color-secondary);
+            color: white;
+        }
+         .btn-secondary:hover {
+             background-color: #4a7c7e; /* Darker Cadet Blue */
+             box-shadow: 0 4px 8px rgba(95, 158, 160, 0.3);
+         }
+
+         .btn-tertiary {
+             background-color: transparent;
+             color: var(--color-primary);
+             border: 2px solid var(--color-primary);
+         }
+         .btn-tertiary:hover {
+             background-color: rgba(160, 82, 45, 0.1);
+         }
+
+
+        /* Challenge Draft & Clues */
+        .challenge-statement {
+            background-color: var(--color-background);
+            border: 1px dashed var(--color-primary);
+            padding: 15px;
+            margin-top: 10px;
+            border-radius: 5px;
+            font-style: italic;
+            font-family: var(--font-secondary);
+            font-size: 1.1em;
+        }
+         .challenge-statement strong {
+             color: var(--color-primary);
+         }
+
+        .compass-suggestions p {
+             font-size: 0.9em;
+             color: #666;
+         }
+         .compass-suggestions code {
+             background-color: #e8e8e8;
+             padding: 2px 5px;
+             border-radius: 3px;
+         }
+
+         .clue-list {
+             list-style: none;
+             padding: 0;
+         }
+         .clue-item {
+             background-color: #f8f8f8;
+             border: 1px solid #eee;
+             border-left: 5px solid var(--color-accent);
+             padding: 15px;
+             margin-bottom: 15px;
+             border-radius: 5px;
+         }
+         .clue-item h4 {
+             font-family: var(--font-primary);
+             font-weight: 600;
+             color: var(--color-secondary);
+             margin-top: 0;
+             margin-bottom: 5px;
+             font-size: 1.1em;
+         }
+
+        /* Progress Indicator (Simple Example) */
+         .progress-indicator {
+             margin-bottom: 20px;
+             font-size: 0.9em;
+             text-align: center;
+             color: #777;
+             font-style: italic;
+         }
+
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <h1 id="app-title">AI Treasure Map™</h1>
+
+        <div id="screen-island-selection" class="screen active">
+            <h2>Chart Your Course!</h2>
+            <p>Welcome, AI Explorer! Choose a functional island to begin your treasure hunt for AI opportunities.</p>
+            <div class="island-selection">
+                <div class="island-card" onclick="selectIsland('Marketing Jungle')">
+                    <img src="https://img.icons8.com/pastel-glyph/64/a0522d/compass--v1.png" alt="Compass icon for Marketing"/>
+                    <h4>Marketing Jungle</h4>
+                </div>
+                <div class="island-card" onclick="selectIsland('Finance Mountains')">
+                     <img src="https://img.icons8.com/pastel-glyph/64/a0522d/treasure-chest--v1.png" alt="Treasure chest icon for Finance"/>
+                    <h4>Finance Mountains</h4>
+                </div>
+                <div class="island-card" onclick="selectIsland('HR Peninsula')">
+                    <img src="https://img.icons8.com/pastel-glyph/64/a0522d/map--v1.png" alt="Map icon for HR"/>
+                    <h4>HR Peninsula</h4>
+                </div>
+                 <div class="island-card" onclick="selectIsland('Operations Reef')">
+                     <img src="https://img.icons8.com/pastel-glyph/64/a0522d/spyglass--v1.png" alt="Spyglass icon for Operations"/>
+                    <h4>Operations Reef</h4>
+                </div>
+            </div>
+        </div>
+
+        <div id="screen-jtbd-1" class="screen">
+            <div class="progress-indicator">Marketing Jungle - Step 1/4: Defining the Job</div>
+            <h2>Discover the Core Job</h2>
+            <div class="jtbd-question">
+                <label for="jtbd-q1">When your Sales team uses leads from Marketing, what specific 'job' are they really trying to get done? What progress are they trying to make?</label>
+                <textarea id="jtbd-q1" placeholder="e.g., 'Quickly identify people likely to buy so they can focus their limited time effectively.'"></textarea>
+                <div class="button-container">
+                     <button class="btn-tertiary" onclick="goToScreen('screen-island-selection')">Back to Map</button>
+                    <button class="btn-primary" onclick="saveAnswerAndGo('jtbd-q1', 'screen-jtbd-2')">Next Clue &rarr;</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="screen-jtbd-2" class="screen">
+             <div class="progress-indicator">Marketing Jungle - Step 2/4: Finding Struggles</div>
+             <h2>Uncover Process Hurdles</h2>
+            <div class="jtbd-question">
+                <label for="jtbd-q2">Where does the current process of generating or handling leads cause struggles, delays, or frustration for the Sales or Marketing teams?</label>
+                <textarea id="jtbd-q2" placeholder="e.g., 'Sales complains that many leads are unqualified, wasting their time.' or 'Marketing spends ages manually sorting leads.'"></textarea>
+                 <div class="button-container">
+                     <button class="btn-tertiary" onclick="goToScreen('screen-jtbd-1')">&larr; Back</button>
+                    <button class="btn-primary" onclick="saveAnswerAndGo('jtbd-q2', 'screen-jtbd-3')">Next Clue &rarr;</button>
+                </div>
+            </div>
+        </div>
+
+         <div id="screen-jtbd-3" class="screen">
+             <div class="progress-indicator">Marketing Jungle - Step 3/4: Identifying Obstacles</div>
+            <h2>Pinpoint the Main Obstacle</h2>
+            <div class="jtbd-question">
+                <label for="jtbd-q3">What's the single biggest obstacle preventing the 'job' (from question 1) from being done perfectly using the current lead process?</label>
+                <textarea id="jtbd-q3" placeholder="e.g., 'Lack of reliable way to predict which leads are actually interested.' or 'Too much manual effort to sift through leads.'"></textarea>
+                <div class="button-container">
+                     <button class="btn-tertiary" onclick="goToScreen('screen-jtbd-2')">&larr; Back</button>
+                    <button class="btn-primary" onclick="saveAnswerAndGo('jtbd-q3', 'screen-challenge-draft')">Synthesize Challenge &rarr;</button>
+                </div>
+            </div>
+        </div>
+
+         <div id="screen-challenge-draft" class="screen">
+             <div class="progress-indicator">Marketing Jungle - Step 4/4: Crafting the Challenge</div>
+            <h2>Draft Your Challenge Statement</h2>
+            <div class="challenge-draft">
+                <p>Based on your answers, here's an initial draft of the challenge:</p>
+                <div id="initial-challenge" class="challenge-statement">
+                    </div>
+                 <p style="margin-top: 20px;">Does this accurately capture the core challenge you want to solve with AI?</p>
+                 <div class="button-container">
+                     <button class="btn-tertiary" onclick="goToScreen('screen-jtbd-3')">&larr; Back</button>
+                     <div>
+                        <button class="btn-secondary" onclick="refineWithCompass()">Refine with Compass AI</button>
+                        <button class="btn-primary" onclick="finalizeChallenge()">Yes, Finalize Challenge!</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+         <div id="screen-compass-suggestions" class="screen">
+             <div class="progress-indicator">Marketing Jungle - Using the Challenge Compass</div>
+            <h2>Challenge Compass AI Suggestions</h2>
+             <div class="challenge-draft">
+                <p>Your initial thoughts:</p>
+                 <div id="compass-input-summary" class="challenge-statement" style="font-size: 0.9em; font-style: normal; background-color: #eee;">
+                    </div>
+                <div class="compass-suggestions" style="margin-top: 20px;">
+                    <p><strong>🧭 Compass AI Suggestion (Simulated):</strong></p>
+                    <p>Consider focusing on the *outcome* and the *metric*. Based on your input about wasted sales time and unreliable prediction, how about phrasing it like:</p>
+                    <code id="ai-suggestion">"Accurately qualify inbound leads using predictive scoring to increase Sales Qualified Lead (SQL) conversion rate by X% and reduce time spent on unqualified leads."</code>
+                </div>
+                 <label for="refined-challenge" style="margin-top: 20px;">Refine your challenge statement below:</label>
+                 <textarea id="refined-challenge"></textarea>
+                 <div class="button-container">
+                    <button class="btn-tertiary" onclick="goToScreen('screen-challenge-draft')">&larr; Back</button>
+                    <button class="btn-primary" onclick="finalizeChallenge(true)">Confirm Refined Challenge</button>
+                </div>
+            </div>
+        </div>
+
+         <div id="screen-clues" class="screen">
+             <div class="progress-indicator">Marketing Jungle - Treasure Identified!</div>
+            <h2>Challenge Defined! Next: AI Clues</h2>
+            <div class="challenge-draft">
+                 <p><strong>Your Defined Challenge:</strong></p>
+                 <div id="final-challenge-display" class="challenge-statement">
+                    </div>
+            </div>
+             <div class="clues-display">
+                 <h3>Relevant AI Solution Clues</h3>
+                 <p>Based on your challenge, here are some AI concepts and techniques worth exploring:</p>
+                 <ul id="clue-list" class="clue-list">
+                    </ul>
+                 <div class="button-container" style="justify-content: flex-end;">
+                    <button class="btn-primary" onclick="alert('Next step: Design Transformation (Not implemented in this mockup)')">Plan Your Route &rarr;</button>
+                 </div>
+            </div>
+        </div>
+
+
+    </div>
+
+    <script>
+        const appState = {
+            currentScreen: 'screen-island-selection',
+            selectedIsland: null,
+            jtbdAnswers: {},
+            initialChallenge: '',
+            finalChallenge: ''
+        };
+
+        function goToScreen(screenId) {
+            document.getElementById(appState.currentScreen).classList.remove('active');
+            document.getElementById(screenId).classList.add('active');
+            appState.currentScreen = screenId;
+            window.scrollTo(0, 0); // Scroll to top on screen change
+        }
+
+        function selectIsland(islandName) {
+            appState.selectedIsland = islandName;
+            // Reset answers if selecting a new island
+            appState.jtbdAnswers = {};
+            appState.initialChallenge = '';
+            appState.finalChallenge = '';
+            document.getElementById('app-title').innerText = `AI Treasure Map™ - ${islandName}`;
+            // Reset JTBD form fields if needed
+            document.getElementById('jtbd-q1').value = '';
+            document.getElementById('jtbd-q2').value = '';
+            document.getElementById('jtbd-q3').value = '';
+            goToScreen('screen-jtbd-1');
+        }
+
+        function saveAnswerAndGo(answerId, nextScreenId) {
+            const answer = document.getElementById(answerId).value;
+            if (answer.trim() === '') {
+                alert('Please provide an answer before proceeding.');
+                return;
+            }
+            appState.jtbdAnswers[answerId] = answer;
+            console.log('Saved answers:', appState.jtbdAnswers); // For debugging
+
+            if (nextScreenId === 'screen-challenge-draft') {
+                generateInitialChallenge();
+            }
+            goToScreen(nextScreenId);
+        }
+
+        function generateInitialChallenge() {
+            // Simple combination logic - replace with more sophisticated summary if needed
+            const job = appState.jtbdAnswers['jtbd-q1'] || '[Job not defined]';
+            const struggle = appState.jtbdAnswers['jtbd-q2'] || '[Struggle not defined]';
+            const obstacle = appState.jtbdAnswers['jtbd-q3'] || '[Obstacle not defined]';
+
+            // Example synthesis - very basic
+            appState.initialChallenge = `Addressing the challenge where '${struggle}', caused by '${obstacle}', prevents the team from effectively doing the job: '${job.substring(0, 50)}...'`;
+            document.getElementById('initial-challenge').innerText = appState.initialChallenge;
+        }
+
+        function refineWithCompass() {
+            // Simulate preparing data for AI and displaying suggestions
+            document.getElementById('compass-input-summary').innerText = `Job: ${appState.jtbdAnswers['jtbd-q1']}\nStruggle: ${appState.jtbdAnswers['jtbd-q2']}\nObstacle: ${appState.jtbdAnswers['jtbd-q3']}`;
+            // Pre-fill refined text area with AI suggestion for user to edit
+             const aiSuggestedText = document.getElementById('ai-suggestion').innerText;
+             document.getElementById('refined-challenge').value = aiSuggestedText; // Or could use initialChallenge
+            goToScreen('screen-compass-suggestions');
+
+            // --- Placeholder for actual API call ---
+            // In a real app, you'd call an API here:
+            // fetch('/api/challenge-compass', { method: 'POST', body: JSON.stringify(appState.jtbdAnswers) })
+            //    .then(response => response.json())
+            //    .then(data => {
+            //        document.getElementById('ai-suggestion').innerText = data.suggestion;
+            //        document.getElementById('refined-challenge').value = data.suggestion;
+            //        goToScreen('screen-compass-suggestions');
+            //     })
+            //    .catch(error => console.error('Error calling Compass AI:', error));
+            // ---------------------------------------
+        }
+
+         function finalizeChallenge(isRefined = false) {
+            if (isRefined) {
+                const refinedText = document.getElementById('refined-challenge').value;
+                 if (refinedText.trim() === '') {
+                    alert('Please enter your refined challenge statement.');
+                    return;
+                }
+                appState.finalChallenge = refinedText;
+            } else {
+                appState.finalChallenge = appState.initialChallenge;
+            }
+             console.log('Final Challenge:', appState.finalChallenge); // Debugging
+             document.getElementById('final-challenge-display').innerText = appState.finalChallenge;
+             loadClues(appState.finalChallenge);
+             goToScreen('screen-clues');
+         }
+
+        function loadClues(challenge) {
+            const clueList = document.getElementById('clue-list');
+            clueList.innerHTML = ''; // Clear previous clues
+
+            // --- Dynamic Clue Loading Logic (Simplified) ---
+            // In a real app, this logic would be more complex, potentially involving keyword analysis
+            // of the challenge or mapping challenges to predefined clue sets.
+
+            let clues = [
+                { title: "Understanding Your Data Needs", content: "AI models need clean, relevant data. For lead scoring, consider historical lead details, engagement history, and conversion data." },
+                 { title: "Ethical Considerations", content: "Ensure your AI lead scoring is fair and avoids unintentional bias based on demographics or other sensitive attributes." }
+            ];
+
+            if (challenge.toLowerCase().includes('predictive') || challenge.toLowerCase().includes('scoring')) {
+                 clues.unshift({ title: "Predictive Lead Scoring Models", content: "These AI models analyze past data to predict the likelihood of a lead converting. Techniques include Logistic Regression, Random Forests, or Gradient Boosting." });
+                 clues.push({ title: "CRM Integration", content: "Plan how the AI score will be integrated back into your CRM system for the sales team to use effectively." });
+            } else if (challenge.toLowerCase().includes('qualify') || challenge.toLowerCase().includes('prioritize')) {
+                 clues.unshift({ title: "AI for Qualification Rules", content: "Simpler AI or rule-based systems can automate initial lead qualification based on firmographics, engagement, or explicit criteria." });
+                 clues.push({ title: "Chatbots for Initial Screening", content: "Consider AI chatbots to ask initial qualifying questions before passing leads to sales." });
+            } else {
+                 clues.unshift({ title: "General AI in Marketing", content: "Explore areas like Natural Language Processing (NLP) for understanding lead feedback or Computer Vision for analyzing marketing images." });
+            }
+            //-------------------------------------------------
+
+
+            clues.forEach(clue => {
+                const li = document.createElement('li');
+                li.classList.add('clue-item');
+                li.innerHTML = `<h4>${clue.title}</h4><p>${clue.content}</p>`;
+                clueList.appendChild(li);
+            });
+        }
+
+        // Initialize first screen
+        // (Already handled by adding 'active' class in HTML)
+
+    </script>
+</body>
+</html>
